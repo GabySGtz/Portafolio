@@ -112,8 +112,11 @@ export class App implements AfterViewInit {
 
   protected readonly timeline = [
     { year: '2026', title: 'Desarrolladora de software', detail: 'Aplicaciones empresariales y mejora de procesos.' },
+    { year: 'DIC 2025', title: 'Fin de estudios', detail: 'Me gradué de la Universidad Autónoma de Aguascalientes como Ingeniera en Sistemas Computacionales.' },
     { year: '2025', title: 'Desarrollo de sistemas de planeacion', detail: 'Control, analisis y centralizacion de datos.' },
-    { year: '2024', title: 'Automatizacion de procesos CAD', detail: 'Herramientas para reducir trabajo manual de ingenieria.' },
+    { year: '2024', title: 'Intercambio de estudios', detail: 'Los últimos meses de 2024 estuve de intercambio en Málaga, España, donde obtuve muchos conocimientos respecto a mi carrera profesional y además de mi crecimiento personal y cultural.' },
+    { year: '2024', title: 'Desarrollo de software', detail: 'Comencé a desarrollar proyectos de software, siendo el más importante de ese año el Sistema de Visitas.' },
+    { year: '2023', title: 'Ingreso a TEC Engineering de México', detail: 'Entré a esta empresa a realizar mis prácticas profesionales, apoyando en el área de sistemas.' }
   ];
 
   protected readonly animatedMetrics = signal([0, 0, 0, 0]);
