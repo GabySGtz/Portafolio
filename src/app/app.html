@@ -1,0 +1,158 @@
+<main>
+  <section class="hero" id="inicio">
+    <div class="hero-content reveal visible">
+      <p class="eyebrow">Portafolio profesional</p>
+      <h1>Hola, soy Ana Gabriela Sanchez Gutierrez</h1>
+      <p class="role">Desarrolladora de software</p>
+      <p class="value">
+        Desarrollo aplicaciones web, sistemas empresariales y herramientas para optimizar procesos de
+        ingenieria con soluciones claras, medibles y faciles de usar.
+      </p>
+
+      <div class="hero-actions" aria-label="Acciones principales">
+        <a class="button primary" href="#proyectos">Ver proyectos</a>
+        <a class="button secondary" href="/assets/Ana-Gabriela-Sanchez-CV.pdf" download>Descargar CV</a>
+        <a class="button ghost" href="#contacto">Contactarme</a>
+      </div>
+    </div>
+
+    <div class="hero-visual reveal visible" aria-label="Ilustracion profesional de Ana Gabriela">
+      <img src="/assets/ana-gabriela-hero.png" alt="Ilustracion profesional temporal" />
+    </div>
+  </section>
+
+  <section class="section technologies reveal" id="tecnologias">
+    <div class="section-heading">
+      <p class="eyebrow">Tecnologias</p>
+      <h2>Herramientas que domino</h2>
+    </div>
+
+    <div class="tech-grid">
+      @for (group of technologies; track group.category) {
+        <article class="tech-card">
+          <h3>{{ group.category }}</h3>
+          <div class="tool-list">
+            @for (tool of group.tools; track tool) {
+              <span>{{ tool }}</span>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="section about reveal" id="sobre-mi">
+    <div>
+      <p class="eyebrow">Sobre mi</p>
+      <h2>Software para convertir procesos manuales en herramientas utiles</h2>
+    </div>
+    <p>
+      Soy desarrolladora de software con experiencia en aplicaciones empresariales, automatizacion de
+      procesos de ingenieria y desarrollo web full stack. Me especializo en transformar tareas
+      repetitivas en sistemas que aumentan la productividad, ordenan la informacion y facilitan la toma
+      de decisiones.
+    </p>
+  </section>
+
+  <section class="section metrics reveal" aria-label="Metricas profesionales">
+    <div class="metrics-grid">
+      @for (metric of metrics; track metric.label; let i = $index) {
+        <article class="metric-card">
+          <strong>{{ animatedMetrics()[i].toLocaleString('en-US') }}{{ metric.suffix }}</strong>
+          <span>{{ metric.label }}</span>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="section projects reveal" id="proyectos">
+    <div class="section-heading">
+      <p class="eyebrow">Proyectos destacados</p>
+      <h2>Trabajo aplicado a problemas reales</h2>
+    </div>
+
+    <div class="project-grid">
+      @for (project of projects; track project.name) {
+        <article class="project-card">
+          <div [class]="project.imageClass" aria-hidden="true">
+            <span>{{ project.name.slice(0, 2) }}</span>
+          </div>
+          <div class="project-body">
+            <h3>{{ project.name }}</h3>
+            <p>{{ project.description }}</p>
+            <div class="chip-list">
+              @for (technology of project.technologies; track technology) {
+                <span>{{ technology }}</span>
+              }
+            </div>
+            <dl>
+              <div>
+                <dt>Problema</dt>
+                <dd>{{ project.problem }}</dd>
+              </div>
+              <div>
+                <dt>Solucion</dt>
+                <dd>{{ project.solution }}</dd>
+              </div>
+              <div>
+                <dt>Resultado</dt>
+                <dd>{{ project.result }}</dd>
+              </div>
+            </dl>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="section experience reveal" id="experiencia">
+    <div class="section-heading">
+      <p class="eyebrow">Experiencia</p>
+      <h2>Linea de tiempo</h2>
+    </div>
+
+    <div class="timeline">
+      @for (item of timeline; track item.year) {
+        <article class="timeline-item">
+          <span>{{ item.year }}</span>
+          <div>
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.detail }}</p>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="section contact reveal" id="contacto">
+    <div class="contact-copy">
+      <p class="eyebrow">Contacto</p>
+      <h2>Hablemos de tu proximo proyecto</h2>
+      <p>
+        Estos enlaces son genericos por ahora. Puedes reemplazarlos despues con tu GitHub, LinkedIn y
+        correo reales.
+      </p>
+      <div class="social-links">
+        <a href="https://github.com/tu-usuario" target="_blank" rel="noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/tu-usuario" target="_blank" rel="noreferrer">LinkedIn</a>
+        <a href="mailto:ana.gabriela@example.com">Correo</a>
+      </div>
+    </div>
+
+    <form #contactForm class="contact-form" (ngSubmit)="sendMessage()">
+      <label>
+        Nombre
+        <input name="name" type="text" [(ngModel)]="contact.name" required />
+      </label>
+      <label>
+        Email
+        <input name="email" type="email" [(ngModel)]="contact.email" required />
+      </label>
+      <label>
+        Mensaje
+        <textarea name="message" rows="5" [(ngModel)]="contact.message" required></textarea>
+      </label>
+      <button class="button primary" type="submit">Enviar mensaje</button>
+    </form>
+  </section>
+</main>
