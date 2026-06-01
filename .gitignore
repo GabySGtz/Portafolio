@@ -43,7 +43,6 @@ __screenshots__/
 .env
 .env.*
 !.env.example
-src/app/emailjs.config.ts
 
 # System files
 .DS_Store
