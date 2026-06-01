@@ -36,8 +36,13 @@ export class App implements AfterViewInit {
   };
   protected readonly isSending = signal(false);
   protected readonly notification = signal<Notification | null>(null);
+  protected readonly expandedProject = signal<string | null>(null);
 
   protected readonly technologies = [
+    {
+      category: 'Lenguajes Principales',
+      tools: ['Java', 'C++'],
+    },
     {
       category: 'Frontend',
       tools: ['Angular', 'TypeScript', 'JavaScript', 'HTML', 'CSS'],
@@ -47,18 +52,18 @@ export class App implements AfterViewInit {
       tools: ['Node.js', 'Express', 'PHP'],
     },
     {
-      category: 'Bases de datos',
-      tools: ['MySQL', 'SQL Server'],
+      category: 'Datos y Análisis',
+      tools: ['MySQL', 'SQL Server', 'Power BI', 'Elasticsearch / Kibana'],
     },
     {
       category: 'Automatizacion / Ingenieria',
-      tools: ['C#', 'Autodesk Inventor API', 'Excel VBA', 'Docker', 'Elasticsearch', 'Kibana'],
+      tools: ['Excel VBA', 'Autodesk Inventor API', 'Docker'],
     },
   ];
 
   protected readonly metrics = [
-    { label: 'proyectos completados', value: 15, suffix: '+' },
-    { label: 'anos programando', value: 5, suffix: '+' },
+    { label: 'proyectos completados', value: 10, suffix: '+' },
+    { label: 'años de experiencia', value: 3, suffix: '+' },
     { label: 'lineas automatizadas', value: 20000, suffix: '+' },
     { label: 'tecnologias dominadas', value: 10, suffix: '+' },
   ];
@@ -155,6 +160,10 @@ export class App implements AfterViewInit {
   protected closeNotification(): void {
     window.clearTimeout(this.notificationTimeout);
     this.notification.set(null);
+  }
+
+  protected toggleProject(projectName: string): void {
+    this.expandedProject.update((currentProject) => (currentProject === projectName ? null : projectName));
   }
 
   private revealOnScroll(): void {

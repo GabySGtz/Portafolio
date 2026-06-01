@@ -81,7 +81,7 @@
 
     <div class="project-grid university-grid">
       @for (project of universityProjects; track project.name) {
-        <article class="project-card">
+        <article class="project-card" [class.expanded]="expandedProject() === project.name">
           <div [class]="project.imageClass" aria-hidden="true">
             <span>{{ project.name.slice(0, 2) }}</span>
           </div>
@@ -93,7 +93,15 @@
                 <span>{{ technology }}</span>
               }
             </div>
-            <dl>
+            <button
+              class="project-toggle"
+              type="button"
+              [attr.aria-expanded]="expandedProject() === project.name"
+              (click)="toggleProject(project.name)"
+            >
+              {{ expandedProject() === project.name ? 'Ver menos' : 'Ver mas' }}
+            </button>
+            <dl class="project-details">
               <div>
                 <dt>Problema</dt>
                 <dd>{{ project.problem }}</dd>
@@ -121,7 +129,7 @@
 
     <div class="project-grid applied-grid">
       @for (project of appliedProjects; track project.name) {
-        <article class="project-card">
+        <article class="project-card" [class.expanded]="expandedProject() === project.name">
           <div [class]="project.imageClass" aria-hidden="true">
             <span>{{ project.name.slice(0, 2) }}</span>
           </div>
@@ -133,7 +141,15 @@
                 <span>{{ technology }}</span>
               }
             </div>
-            <dl>
+            <button
+              class="project-toggle"
+              type="button"
+              [attr.aria-expanded]="expandedProject() === project.name"
+              (click)="toggleProject(project.name)"
+            >
+              {{ expandedProject() === project.name ? 'Ver menos' : 'Ver mas' }}
+            </button>
+            <dl class="project-details">
               <div>
                 <dt>Problema</dt>
                 <dd>{{ project.problem }}</dd>
