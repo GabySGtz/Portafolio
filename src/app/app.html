@@ -1,4 +1,12 @@
 <main>
+  @if (notification(); as toast) {
+    <aside class="toast" [class.error]="toast.type === 'error'" role="status" aria-live="polite">
+      <span class="toast-mark" aria-hidden="true"></span>
+      <p>{{ toast.message }}</p>
+      <button type="button" aria-label="Cerrar notificacion" (click)="closeNotification()">x</button>
+    </aside>
+  }
+
   <section class="hero" id="inicio">
     <div class="hero-content reveal visible">
       <p class="eyebrow">Portafolio profesional</p>
@@ -67,12 +75,52 @@
 
   <section class="section projects reveal" id="proyectos">
     <div class="section-heading">
-      <p class="eyebrow">Proyectos destacados</p>
-      <h2>Trabajo aplicado a problemas reales</h2>
+      <p class="eyebrow">Proyectos universitarios</p>
+      <h2>Aprendizaje aplicado desde la universidad</h2>
     </div>
 
-    <div class="project-grid">
-      @for (project of projects; track project.name) {
+    <div class="project-grid university-grid">
+      @for (project of universityProjects; track project.name) {
+        <article class="project-card">
+          <div [class]="project.imageClass" aria-hidden="true">
+            <span>{{ project.name.slice(0, 2) }}</span>
+          </div>
+          <div class="project-body">
+            <h3>{{ project.name }}</h3>
+            <p>{{ project.description }}</p>
+            <div class="chip-list">
+              @for (technology of project.technologies; track technology) {
+                <span>{{ technology }}</span>
+              }
+            </div>
+            <dl>
+              <div>
+                <dt>Problema</dt>
+                <dd>{{ project.problem }}</dd>
+              </div>
+              <div>
+                <dt>Solucion</dt>
+                <dd>{{ project.solution }}</dd>
+              </div>
+              <div>
+                <dt>Resultado</dt>
+                <dd>{{ project.result }}</dd>
+              </div>
+            </dl>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="section projects reveal" id="proyectos-aplicados">
+    <div class="section-heading">
+      <p class="eyebrow">Proyectos aplicados</p>
+      <h2>Soluciones a problemas reales</h2>
+    </div>
+
+    <div class="project-grid applied-grid">
+      @for (project of appliedProjects; track project.name) {
         <article class="project-card">
           <div [class]="project.imageClass" aria-hidden="true">
             <span>{{ project.name.slice(0, 2) }}</span>
@@ -152,7 +200,9 @@
         Mensaje
         <textarea name="message" rows="5" [(ngModel)]="contact.message" required></textarea>
       </label>
-      <button class="button primary" type="submit">Enviar mensaje</button>
+      <button class="button primary" type="submit" [disabled]="isSending()">
+        {{ isSending() ? 'Enviando...' : 'Enviar mensaje' }}
+      </button>
     </form>
   </section>
 </main>

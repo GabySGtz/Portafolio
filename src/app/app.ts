@@ -1,5 +1,7 @@
 import { AfterViewInit, Component, ElementRef, ViewChild, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import emailjs from '@emailjs/browser';
+import { emailJsConfig } from './emailjs.config';
 
 type Project = {
   name: string;
@@ -11,6 +13,11 @@ type Project = {
   imageClass: string;
 };
 
+type Notification = {
+  message: string;
+  type: 'success' | 'error';
+};
+
 @Component({
   selector: 'app-root',
   imports: [FormsModule],
@@ -19,12 +26,16 @@ type Project = {
 })
 export class App implements AfterViewInit {
   @ViewChild('contactForm') private readonly contactForm?: ElementRef<HTMLFormElement>;
+  private metricAnimationFrame = 0;
+  private notificationTimeout = 0;
 
   protected readonly contact = {
     name: '',
     email: '',
     message: '',
   };
+  protected readonly isSending = signal(false);
+  protected readonly notification = signal<Notification | null>(null);
 
   protected readonly technologies = [
     {
@@ -52,7 +63,7 @@ export class App implements AfterViewInit {
     { label: 'tecnologias dominadas', value: 10, suffix: '+' },
   ];
 
-  protected readonly projects: Project[] = [
+  protected readonly universityProjects: Project[] = [
     {
       name: 'Juego Plantas vs Zombies',
       description:
@@ -65,6 +76,9 @@ export class App implements AfterViewInit {
       result: 'Experiencia jugable con funcionalidades base del PvZ y practica solida de POO.',
       imageClass: 'project-image plants',
     },
+  ];
+
+  protected readonly appliedProjects: Project[] = [
     {
       name: 'Sistema de HH Instaladores',
       description:
@@ -104,18 +118,43 @@ export class App implements AfterViewInit {
     this.animateMetrics();
   }
 
-  protected buildMailto(): string {
-    const subject = encodeURIComponent(`Contacto desde portafolio - ${this.contact.name || 'Nuevo mensaje'}`);
-    const body = encodeURIComponent(
-      `Nombre: ${this.contact.name}\nEmail: ${this.contact.email}\n\n${this.contact.message}`,
-    );
+  protected async sendMessage(): Promise<void> {
+    if (this.isSending()) {
+      return;
+    }
 
-    return `mailto:ana.gabriela@example.com?subject=${subject}&body=${body}`;
+    this.isSending.set(true);
+    this.notification.set(null);
+
+    try {
+      await emailjs.send(
+        emailJsConfig.serviceId,
+        emailJsConfig.templateId,
+        {
+          from_name: this.contact.name,
+          from_email: this.contact.email,
+          message: this.contact.message,
+        },
+        {
+          publicKey: emailJsConfig.publicKey,
+        },
+      );
+
+      this.showNotification('Mensaje enviado correctamente. Gracias por escribirme.', 'success');
+      this.contact.name = '';
+      this.contact.email = '';
+      this.contact.message = '';
+      this.contactForm?.nativeElement.reset();
+    } catch {
+      this.showNotification('No se pudo enviar el mensaje. Intenta de nuevo o escribeme por correo.', 'error');
+    } finally {
+      this.isSending.set(false);
+    }
   }
 
-  protected sendMessage(): void {
-    window.location.href = this.buildMailto();
-    this.contactForm?.nativeElement.reset();
+  protected closeNotification(): void {
+    window.clearTimeout(this.notificationTimeout);
+    this.notification.set(null);
   }
 
   private revealOnScroll(): void {
@@ -125,7 +164,8 @@ export class App implements AfterViewInit {
         for (const entry of entries) {
           if (entry.isIntersecting) {
             entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
+          } else {
+            entry.target.classList.remove('visible');
           }
         }
       },
@@ -144,11 +184,15 @@ export class App implements AfterViewInit {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) {
+          cancelAnimationFrame(this.metricAnimationFrame);
+          this.animatedMetrics.set(this.metrics.map(() => 0));
           return;
         }
 
         const duration = 1200;
         const start = performance.now();
+        cancelAnimationFrame(this.metricAnimationFrame);
+        this.animatedMetrics.set(this.metrics.map(() => 0));
 
         const tick = (now: number) => {
           const progress = Math.min((now - start) / duration, 1);
@@ -156,16 +200,21 @@ export class App implements AfterViewInit {
           this.animatedMetrics.set(this.metrics.map((metric) => Math.round(metric.value * eased)));
 
           if (progress < 1) {
-            requestAnimationFrame(tick);
+            this.metricAnimationFrame = requestAnimationFrame(tick);
           }
         };
 
-        requestAnimationFrame(tick);
-        observer.disconnect();
+        this.metricAnimationFrame = requestAnimationFrame(tick);
       },
       { threshold: 0.35 },
     );
 
     observer.observe(metricSection);
+  }
+
+  private showNotification(message: string, type: Notification['type']): void {
+    window.clearTimeout(this.notificationTimeout);
+    this.notification.set({ message, type });
+    this.notificationTimeout = window.setTimeout(() => this.notification.set(null), 5200);
   }
 }

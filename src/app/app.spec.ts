@@ -11,11 +11,13 @@ describe('App', () => {
 
   it('should include Ana Gabriela portfolio data', () => {
     const app = new App() as unknown as {
-      projects: Array<{ name: string }>;
+      universityProjects: Array<{ name: string }>;
+      appliedProjects: Array<{ name: string }>;
       technologies: Array<{ category: string }>;
     };
 
-    expect(app.projects.some((project) => project.name === 'TEC Performance')).toBe(true);
+    expect(app.universityProjects.some((project) => project.name === 'Juego Plantas vs Zombies')).toBe(true);
+    expect(app.appliedProjects.some((project) => project.name === 'TEC Performance')).toBe(true);
     expect(app.technologies.some((group) => group.category === 'Frontend')).toBe(true);
   });
 });
