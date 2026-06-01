@@ -150,8 +150,10 @@ export class App implements AfterViewInit {
       this.contact.email = '';
       this.contact.message = '';
       this.contactForm?.nativeElement.reset();
-    } catch {
-      this.showNotification('No se pudo enviar el mensaje. Intenta de nuevo o escribeme por correo.', 'error');
+    } catch (error) {
+      console.error('EmailJS send error:', error);
+      const errorText = error instanceof Error ? error.message : 'Revisa la consola del navegador para mas detalles.';
+      this.showNotification(`No se pudo enviar el mensaje. ${errorText}`, 'error');
     } finally {
       this.isSending.set(false);
     }
